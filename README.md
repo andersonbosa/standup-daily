@@ -74,17 +74,18 @@ A aplicação está pronta para produção! Basta fazer deploy na Vercel:
 Ao fazer deploy, configure as seguintes variáveis de ambiente no painel da Vercel:
 
 1. `GIPHY_API_KEY` - Sua chave da API do Giphy
-2. `API_SECRET` - String aleatória segura para proteger a rota API
-3. `NEXT_PUBLIC_API_SECRET` - Mesmo valor do `API_SECRET`
+2. `ALLOWED_ORIGINS` (opcional) - Lista de origens permitidas separadas por vírgula
 
-### 🔒 Segurança da API
+### 🔒 Segurança e Otimização da API
 
 A aplicação implementa proteção da API Key do Giphy através de:
 - ✅ Rota API server-side (`/api/giphy`)
-- ✅ Validação de header secreto (`x-api-secret`)
-- ✅ Verificação de origem (origin) em produção
+- ✅ Verificação CORS (origin) em produção
 - ✅ API Key nunca exposta no cliente
 - ✅ Proteção contra uso não autorizado da quota
+- ✅ **Cache em memória (24h)** - Reduz drasticamente o uso da quota
+- ✅ **Cache HTTP/CDN** - Vercel Edge Network cache por 24h
+- ✅ **Stale-while-revalidate** - Serve cache antigo enquanto atualiza
 
 ## 📝 Licença
 
