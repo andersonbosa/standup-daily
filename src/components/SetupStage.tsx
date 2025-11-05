@@ -15,15 +15,9 @@ import {
   Portal,
 } from '@chakra-ui/react'
 import { toaster } from '@/components/ui/toaster'
-import type { TranslationKey } from '@/i18n/translations'
 import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react'
 import { playSound } from '@/utils/sounds'
-
-interface SetupStageProps {
-  initialConfig: SessionConfig | null
-  onStart: (config: SessionConfig) => void
-  t: (key: TranslationKey) => string
-}
+import { useApp } from '@/components/context/AppContext'
 
 const EMOJI_POOL = [
   '👨‍💻', '👩‍💻', '🧑‍💻', '👨‍🔬', '👩‍🔬', '🧑‍🔬',
@@ -49,7 +43,10 @@ const getRandomEmoji = (usedEmojis: string[]): string => {
   return availableEmojis[Math.floor(Math.random() * availableEmojis.length)]
 }
 
-export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
+export function SetupStage() {
+  const { sessionState, saveConfig, startDaily, t } = useApp()
+  const initialConfig = sessionState.config
+  
   const [participants, setParticipants] = useState<Participant[]>(
     initialConfig?.participants || []
   )
@@ -72,7 +69,7 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
       isAbsent: false,
     }
 
-    setParticipants([...participants, newParticipant])
+    setParticipants(Array.from(new Set([...participants, newParticipant])))
     setNewName('')
   }
 
@@ -129,7 +126,8 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
       totalMinutes,
     }
 
-    onStart(config)
+    saveConfig(config)
+    setTimeout(() => startDaily(), 100)
   }
 
   const titleCase = (text: string) => {
@@ -183,8 +181,10 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
         totalMinutes,
       }
       localStorage.setItem('daily-timer-config', JSON.stringify(config))
+    } else if (participants.length === 0 && initialConfig === null) {
+      localStorage.removeItem('daily-timer-config')
     }
-  }, [participants, totalMinutes, initialConfig?.totalMinutes])
+  }, [participants, totalMinutes, initialConfig])
 
   return (
     <Box h="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }} display="flex" alignItems="center" py={{ base: 8, md: 0 }} overflowY={{ base: 'auto', md: 'hidden' }}>
@@ -212,7 +212,7 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
                   min={1}
                   max={60}
                   value={totalMinutes}
-                  onChange={(e) => setTotalMinutes(Number.parseInt(e.target.value) || 20)}
+                  onChange={(e) => setTotalMinutes(Number.parseInt(e.target.value, 10) || 20)}
                   size="lg"
                   fontSize="lg"
                   bg="white"

@@ -46,6 +46,7 @@ export const translations = {
     'menu.lightMode': 'Modo Claro',
     'menu.darkMode': 'Modo Escuro',
     'menu.language': 'Idioma',
+    'menu.clearParticipants': 'Apagar Participantes',
   },
   'en': {
     // SetupStage
@@ -94,6 +95,7 @@ export const translations = {
     'menu.lightMode': 'Light Mode',
     'menu.darkMode': 'Dark Mode',
     'menu.language': 'Language',
+    'menu.clearParticipants': 'Clear Participants',
   },
   'es': {
     // SetupStage
@@ -142,6 +144,7 @@ export const translations = {
     'menu.lightMode': 'Modo Claro',
     'menu.darkMode': 'Modo Oscuro',
     'menu.language': 'Idioma',
+    'menu.clearParticipants': 'Borrar Participantes',
   },
 }
 

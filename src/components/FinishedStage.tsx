@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import type { ParticipantStats } from '@/types'
 import type { TranslationKey } from '@/i18n/translations'
 import { playSound } from '@/utils/sounds'
+import { useApp } from '@/components/context/AppContext'
 import {
   Box,
   Button,
@@ -16,13 +16,6 @@ import {
   GridItem,
   Image,
 } from '@chakra-ui/react'
-
-interface FinishedStageProps {
-  stats: ParticipantStats[]
-  onRestart: () => void
-  onBackToSetup: () => void
-  t: (key: TranslationKey) => string
-}
 
 const MOTIVATIONAL_PHRASE_KEYS: TranslationKey[] = [
   'finished.phrase1',
@@ -71,7 +64,9 @@ async function fetchGiphyGifs(query: string): Promise<GiphyGif[]> {
   }
 }
 
-export function FinishedStage({ stats, onRestart, onBackToSetup, t }: FinishedStageProps) {
+export function FinishedStage() {
+  const { sessionState, resetDaily, startDaily, t } = useApp();
+  const stats = sessionState.participantStats;
   const [randomPhraseKey] = useState(() =>
     MOTIVATIONAL_PHRASE_KEYS[Math.floor(Math.random() * MOTIVATIONAL_PHRASE_KEYS.length)]
   )
@@ -161,7 +156,7 @@ export function FinishedStage({ stats, onRestart, onBackToSetup, t }: FinishedSt
           )}
 
           {/* Stats Overview */}
-          <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={3}>
+          <Grid templateColumns={{  base: 'repeat(3, 1fr)' }} gap={3}>
             <GridItem>
               <VStack
                 gap={1}
@@ -299,7 +294,7 @@ export function FinishedStage({ stats, onRestart, onBackToSetup, t }: FinishedSt
             </VStack>
           </VStack>
 
-          {exceededCount > 0 && (
+          {exceededCount > 3 && (
             <Box p={3} bg="yellow.50" borderWidth="1px" borderColor="yellow.200" _dark={{ bg: 'yellow.950', borderColor: 'yellow.900' }} rounded="lg">
               <Text fontSize="xs" color="gray.700" _dark={{ color: 'yellow.200' }}>
                 💡 Considere aumentar o tempo total para a próxima daily
@@ -312,7 +307,7 @@ export function FinishedStage({ stats, onRestart, onBackToSetup, t }: FinishedSt
             <Button
               onClick={() => {
                 playSound('transition');
-                onRestart();
+                resetDaily();
               }}
               size="lg"
               bg="gray.900"
@@ -328,7 +323,7 @@ export function FinishedStage({ stats, onRestart, onBackToSetup, t }: FinishedSt
             <Button
               onClick={() => {
                 playSound('transition');
-                onBackToSetup();
+                startDaily();
               }}
               size="lg"
               variant="ghost"

@@ -1,9 +1,31 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import type { SessionConfig, SessionState, ParticipantStats, Stage } from '@/types';
-import { useLocalStorage } from './useLocalStorage';
+'use client';
 
-export function useDailyTimer() {
+import { createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode } from 'react';
+import type { SessionConfig, SessionState, ParticipantStats, Participant } from '@/types';
+import type { Language, TranslationKey } from '@/i18n/translations';
+import { getTranslation } from '@/i18n/translations';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+
+interface AppContextType {
+  sessionState: SessionState;
+  language: Language;
+  presentParticipants: Participant[];
+  timePerParticipant: number;
+  setLanguage: (lang: Language) => void;
+  t: (key: TranslationKey) => string;
+  saveConfig: (config: SessionConfig) => void;
+  startDaily: () => void;
+  nextParticipant: () => void;
+  togglePause: () => void;
+  resetDaily: () => void;
+  clearParticipants: () => void;
+}
+
+const AppContext = createContext<AppContextType | undefined>(undefined);
+
+export function AppProvider({ children }: { children: ReactNode }) {
   const [savedConfig, setSavedConfig] = useLocalStorage<SessionConfig | null>('daily-timer-config', null);
+  const [language, setLanguage] = useLocalStorage<Language>('daily-timer-language', 'pt-BR');
   
   const [sessionState, setSessionState] = useState<SessionState>({
     stage: 'setup',
@@ -20,6 +42,10 @@ export function useDailyTimer() {
   const timePerParticipant = presentParticipants.length > 0
     ? Math.floor((sessionState.config?.totalMinutes || 0) * 60 / presentParticipants.length)
     : 0;
+
+  const t = useCallback((key: TranslationKey): string => {
+    return getTranslation(language, key);
+  }, [language]);
 
   const saveConfig = useCallback((config: SessionConfig) => {
     setSavedConfig(config);
@@ -85,13 +111,24 @@ export function useDailyTimer() {
     }));
   }, []);
 
+  const clearParticipants = useCallback(() => {
+    localStorage.removeItem('daily-timer-config');
+    localStorage.removeItem('lastConfigToast');
+    setSavedConfig(null);
+    setSessionState({
+      stage: 'setup',
+      config: null,
+      currentParticipantIndex: 0,
+      participantStats: [],
+      isPaused: false,
+      remainingSeconds: 0,
+    });
+  }, [setSavedConfig]);
+
   useEffect(() => {
     if (sessionState.stage === 'running' && !sessionState.isPaused) {
       timerRef.current = setInterval(() => {
         setSessionState(prev => {
-          if (prev.remainingSeconds <= 0) {
-            return prev;
-          }
           return { ...prev, remainingSeconds: prev.remainingSeconds - 1 };
         });
       }, 1000);
@@ -102,15 +139,29 @@ export function useDailyTimer() {
     }
   }, [sessionState.stage, sessionState.isPaused]);
 
-  return {
+  const value: AppContextType = {
     sessionState,
+    language,
+    presentParticipants,
+    timePerParticipant,
+    setLanguage,
+    t,
     saveConfig,
     startDaily,
     nextParticipant,
     togglePause,
     resetDaily,
-    presentParticipants,
-    timePerParticipant,
+    clearParticipants,
   };
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+}
+
+export function useApp() {
+  const context = useContext(AppContext);
+  if (context === undefined) {
+    throw new Error('useApp must be used within an AppProvider');
+  }
+  return context;
 }
 

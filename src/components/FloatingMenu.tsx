@@ -16,19 +16,13 @@ import {
   MenuItemGroup,
 } from '@/components/ui/menu'
 import { playSound } from '@/utils/sounds'
+import { useApp } from '@/components/context/AppContext'
 
-import type { Language, TranslationKey } from '@/i18n/translations'
-
-interface FloatingMenuProps {
-  language: Language
-  onLanguageChange: (lang: Language) => void
-  t: (key: TranslationKey) => string
-}
-
-export function FloatingMenu({ language, onLanguageChange, t }: FloatingMenuProps) {
+export function FloatingMenu() {
+  const { language, setLanguage, t, clearParticipants, sessionState } = useApp()
   const { colorMode, toggleColorMode } = useColorMode()
 
-  const languages: Array<{ code: Language; label: string; flag: string }> = [
+  const languages: Array<{ code: 'pt-BR' | 'en' | 'es'; label: string; flag: string }> = [
     { code: 'pt-BR', label: 'Português', flag: '🇧🇷' },
     { code: 'en', label: 'English', flag: '🇺🇸' },
     { code: 'es', label: 'Español', flag: '🇪🇸' },
@@ -70,7 +64,6 @@ export function FloatingMenu({ language, onLanguageChange, t }: FloatingMenuProp
           borderColor="gray.200"
           _dark={{ bg: 'gray.900', borderColor: 'gray.700' }}
         >
-          {/* Theme Toggle */}
           <MenuItem
             value="theme"
             onClick={() => {
@@ -93,7 +86,6 @@ export function FloatingMenu({ language, onLanguageChange, t }: FloatingMenuProp
 
           <MenuSeparator />
 
-          {/* Language Section */}
           <MenuItemGroup>
             {languages.map((lang) => (
               <MenuItem
@@ -101,7 +93,7 @@ export function FloatingMenu({ language, onLanguageChange, t }: FloatingMenuProp
                 value={lang.code}
                 onClick={() => {
                   playSound('transition');
-                  onLanguageChange(lang.code);
+                  setLanguage(lang.code);
                 }}
                 bg={language === lang.code ? 'gray.50' : 'transparent'}
                 _dark={{
@@ -124,6 +116,33 @@ export function FloatingMenu({ language, onLanguageChange, t }: FloatingMenuProp
               </MenuItem>
             ))}
           </MenuItemGroup>
+
+          {sessionState.stage === 'setup' && (
+            <>
+              <MenuSeparator />
+              
+              <MenuItem
+                value="clear"
+                onClick={() => {
+                  if (window.confirm(t('menu.clearParticipants') + '?')) {
+                    playSound('transition');
+                    clearParticipants();
+                  }
+                }}
+                _hover={{
+                  bg: 'red.50',
+                  _dark: { bg: 'red.950' },
+                }}
+              >
+                <HStack gap={3} w="full">
+                  <Text fontSize="xl">🗑️</Text>
+                  <Text fontSize="sm" fontWeight="500" flex={1} color="red.600" _dark={{ color: 'red.400' }}>
+                    {t('menu.clearParticipants')}
+                  </Text>
+                </HStack>
+              </MenuItem>
+            </>
+          )}
         </MenuContent>
       </MenuRoot>
     </Box>
