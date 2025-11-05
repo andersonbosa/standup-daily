@@ -40,25 +40,37 @@ export async function GET(request: NextRequest) {
   try {
     // Verificar CORS - apenas permitir requisições do próprio domínio
     const origin = request.headers.get('origin')
+    const referer = request.headers.get('referer')
     const host = request.headers.get('host')
 
-    // Em produção, verificar se origin corresponde ao host ou está na lista de permitidos
+    // Em produção, verificar se origin/referer corresponde ao host ou está na lista de permitidos
     if (process.env.NODE_ENV === 'production') {
-      if (!origin) {
-        return NextResponse.json(
-          { error: 'Forbidden - No origin header' },
-          { status: 403 }
-        )
-      }
+      // Se não tem origin nem referer, pode ser uma requisição interna do Next.js (SSR)
+      // ou uma requisição direta sem navegador
+      if (!origin && !referer) {
+        // Permitir requisições internas (same-origin)
+        // Bloquear apenas se for claramente uma requisição externa
+        const userAgent = request.headers.get('user-agent')
+        if (userAgent && !userAgent.includes('Next.js')) {
+          return NextResponse.json(
+            { error: 'Forbidden - No origin or referer header' },
+            { status: 403 }
+          )
+        }
+      } else {
+        // Verificar origin ou referer
+        const sourceUrl = origin || referer
+        if (sourceUrl) {
+          const sourceHost = new URL(sourceUrl).host
+          const isAllowed = sourceHost === host || ALLOWED_ORIGINS.includes(sourceUrl)
 
-      const originHost = new URL(origin).host
-      const isAllowed = originHost === host || ALLOWED_ORIGINS.includes(origin)
-
-      if (!isAllowed) {
-        return NextResponse.json(
-          { error: 'Forbidden - Invalid origin' },
-          { status: 403 }
-        )
+          if (!isAllowed) {
+            return NextResponse.json(
+              { error: 'Forbidden - Invalid origin' },
+              { status: 403 }
+            )
+          }
+        }
       }
     }
 

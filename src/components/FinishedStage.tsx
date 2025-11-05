@@ -49,7 +49,14 @@ interface GiphyGif {
 async function fetchGiphyGifs(query: string): Promise<GiphyGif[]> {
   try {
     const response = await fetch(
-      `/api/giphy?q=${encodeURIComponent(query)}&limit=3`
+      `/api/giphy?q=${encodeURIComponent(query)}&limit=3`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin',
+      }
     )
 
     if (!response.ok) {
