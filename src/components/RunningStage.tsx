@@ -101,13 +101,13 @@ export function RunningStage({
       <Container maxW="6xl" h="full" py={{ base: 8, md: 0 }} pt={{ base: 12, md: 0 }}>
         <Grid 
           templateColumns={{ base: '1fr', lg: '2fr 1fr' }} 
-          gap={{ base: 6, md: 8 }}
+          gap={{ base: 4, md: 8 }}
           h="full"
           alignItems="center"
         >
           {/* Main Timer */}
           <GridItem>
-            <VStack gap={{ base: 6, md: 8 }} justify="center">
+            <VStack gap={{ base: 4, md: 8 }} justify="center">
               <VStack gap={{ base: 3, md: 4 }}>
                 <Text fontSize="sm" color="gray.500" _dark={{ color: 'gray.400' }} fontWeight="500">
                   {currentIndex + 1} / {participants.length}
@@ -224,17 +224,17 @@ export function RunningStage({
           </GridItem>
 
           {/* Participants List */}
-          <GridItem display={{ base: 'none', lg: 'block' }}>
+          <GridItem>
             <Box
               bg="white"
               borderWidth="1px"
               borderColor="gray.200"
               _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
               rounded="lg"
-              p={4}
-              maxH="calc(100vh - 4rem)"
+              p={{ base: 3, lg: 4 }}
+              maxH={{ base: '200px', lg: 'calc(100vh - 4rem)' }}
             >
-              <VStack gap={3} align="stretch">
+              <VStack gap={{ base: 2, lg: 3 }} align="stretch">
                 <Text 
                   fontSize="xs" 
                   fontWeight="500" 
@@ -246,9 +246,9 @@ export function RunningStage({
                   {t('running.order')}
                 </Text>
                 <VStack 
-                  gap={1.5} 
+                  gap={{ base: 1, lg: 1.5 }}
                   overflowY="auto"
-                  maxH="calc(100vh - 10rem)"
+                  maxH={{ base: '150px', lg: 'calc(100vh - 10rem)' }}
                   css={{
                     '&::-webkit-scrollbar': {
                       width: '6px',
@@ -265,7 +265,7 @@ export function RunningStage({
                   {participants.map((participant, index) => (
                     <HStack
                       key={participant.id}
-                      p={2.5}
+                      p={{ base: 2, lg: 2.5 }}
                       w="full"
                       bg={index === currentIndex ? 'gray.900' : 'transparent'}
                       color={index === currentIndex ? 'white' : index < currentIndex ? 'gray.400' : 'gray.900'}
@@ -275,9 +275,9 @@ export function RunningStage({
                       }}
                       rounded="md"
                       fontWeight={index === currentIndex ? '600' : '400'}
-                      fontSize="sm"
+                      fontSize={{ base: 'xs', lg: 'sm' }}
                     >
-                      <Text fontSize="lg">{participant.emoji}</Text>
+                      <Text fontSize={{ base: 'md', lg: 'lg' }}>{participant.emoji}</Text>
                       <Text flex={1} truncate>{participant.name}</Text>
                       {index < currentIndex && <Text fontSize="xs">✓</Text>}
                       {index === currentIndex && (

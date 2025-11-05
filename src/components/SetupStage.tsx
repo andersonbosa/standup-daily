@@ -168,6 +168,16 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
     }
   }, [emojiPickerOpen])
 
+  useEffect(() => {
+    if (participants.length > 0 || totalMinutes !== (initialConfig?.totalMinutes || 20)) {
+      const config: SessionConfig = {
+        participants,
+        totalMinutes,
+      }
+      localStorage.setItem('daily-timer-config', JSON.stringify(config))
+    }
+  }, [participants, totalMinutes, initialConfig?.totalMinutes])
+
   return (
     <Box h="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }} display="flex" alignItems="center" py={{ base: 8, md: 0 }} overflowY={{ base: 'auto', md: 'hidden' }}>
       <Container maxW="2xl" w="full">
