@@ -15,6 +15,7 @@ import {
   MenuSeparator,
   MenuItemGroup,
 } from '@/components/ui/menu'
+import { playSound } from '@/utils/sounds'
 
 import type { Language, TranslationKey } from '@/i18n/translations'
 
@@ -72,7 +73,10 @@ export function FloatingMenu({ language, onLanguageChange, t }: FloatingMenuProp
           {/* Theme Toggle */}
           <MenuItem
             value="theme"
-            onClick={toggleColorMode}
+            onClick={() => {
+              playSound('transition');
+              toggleColorMode();
+            }}
             closeOnSelect={false}
             _hover={{
               bg: 'gray.50',
@@ -95,7 +99,10 @@ export function FloatingMenu({ language, onLanguageChange, t }: FloatingMenuProp
               <MenuItem
                 key={lang.code}
                 value={lang.code}
-                onClick={() => onLanguageChange(lang.code)}
+                onClick={() => {
+                  playSound('transition');
+                  onLanguageChange(lang.code);
+                }}
                 bg={language === lang.code ? 'gray.50' : 'transparent'}
                 _dark={{
                   bg: language === lang.code ? 'gray.800' : 'transparent',

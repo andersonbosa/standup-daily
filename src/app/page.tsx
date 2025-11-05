@@ -52,8 +52,8 @@ export default function Home() {
       {sessionState.stage === 'finished' && (
         <FinishedStage
           stats={sessionState.participantStats}
-          onRestart={startDaily}
-          onBackToSetup={resetDaily}
+          onRestart={resetDaily}
+          onBackToSetup={startDaily}
           t={t}
         />
       )}

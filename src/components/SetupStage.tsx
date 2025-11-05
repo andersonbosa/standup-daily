@@ -17,6 +17,7 @@ import {
 import { toaster } from '@/components/ui/toaster'
 import type { TranslationKey } from '@/i18n/translations'
 import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react'
+import { playSound } from '@/utils/sounds'
 
 interface SetupStageProps {
   initialConfig: SessionConfig | null
@@ -61,7 +62,8 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
 
   const addParticipant = () => {
     if (!newName.trim()) return
-
+    
+    playSound('transition')
     const usedEmojis = participants.map(p => p.emoji || '')
     const newParticipant: Participant = {
       id: crypto.randomUUID(),
@@ -75,10 +77,12 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
   }
 
   const removeParticipant = (id: string) => {
+    playSound('transition')
     setParticipants(participants.filter(p => p.id !== id))
   }
 
   const toggleAbsent = (id: string) => {
+    playSound('transition')
     setParticipants(
       participants.map(p => (p.id === id ? { ...p, isAbsent: !p.isAbsent } : p))
     )
@@ -89,10 +93,12 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
   }
 
   const openEmojiPicker = (id: string) => {
+    playSound('transition')
     setEmojiPickerOpen(id)
   }
 
   const handleEmojiSelect = (emojiData: EmojiClickData, participantId: string) => {
+    playSound('transition')
     setParticipants(
       participants.map(p => 
         p.id === participantId 
@@ -104,6 +110,7 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
   }
 
   const shuffleParticipants = () => {
+    playSound('transition')
     const shuffled = [...participants]
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -116,6 +123,7 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
     if (participants.length === 0) return
     if (participants.every(p => p.isAbsent)) return
 
+    playSound('transition')
     const config: SessionConfig = {
       participants,
       totalMinutes,

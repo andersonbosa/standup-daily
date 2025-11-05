@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import type { ParticipantStats } from '@/types'
 import type { TranslationKey } from '@/i18n/translations'
+import { playSound } from '@/utils/sounds'
 import {
   Box,
   Button,
@@ -63,7 +64,7 @@ async function fetchGiphyGifs(query: string): Promise<GiphyGif[]> {
   }
 }
 
-export function FinishedStage({ stats, onRestart, onBackToSetup, t }: FinishedStageProps) {
+export function FinishedStage({ stats, onRestart, onBackToSetup }: FinishedStageProps) {
   const [randomPhrase] = useState(() =>
     MOTIVATIONAL_PHRASES[Math.floor(Math.random() * MOTIVATIONAL_PHRASES.length)]
   )
@@ -302,7 +303,10 @@ export function FinishedStage({ stats, onRestart, onBackToSetup, t }: FinishedSt
           {/* Actions */}
           <HStack gap={2} justify="center">
             <Button
-              onClick={onRestart}
+              onClick={() => {
+                playSound('transition');
+                onRestart();
+              }}
               size="lg"
               bg="gray.900"
               color="white"
@@ -312,10 +316,13 @@ export function FinishedStage({ stats, onRestart, onBackToSetup, t }: FinishedSt
               px={6}
               fontSize="sm"
             >
-              Nova Daily
+              Configurações
             </Button>
             <Button
-              onClick={onBackToSetup}
+              onClick={() => {
+                playSound('transition');
+                onBackToSetup();
+              }}
               size="lg"
               variant="ghost"
               color="gray.600"
@@ -323,7 +330,7 @@ export function FinishedStage({ stats, onRestart, onBackToSetup, t }: FinishedSt
               _hover={{ color: 'gray.900', bg: 'gray.100', _dark: { color: 'gray.100', bg: 'gray.800' } }}
               fontSize="sm"
             >
-              Configurações
+              Nova Daily
             </Button>
           </HStack>
         </VStack>

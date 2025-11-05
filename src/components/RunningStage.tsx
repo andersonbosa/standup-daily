@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import type { Participant } from '@/types';
 import type { TranslationKey } from '@/i18n/translations';
+import { playSound } from '@/utils/sounds';
 import {
   Box,
   Button,
@@ -174,7 +175,10 @@ export function RunningStage({
 
               <HStack gap={2} flexWrap="wrap" justify="center">
                 <Button
-                  onClick={onTogglePause}
+                  onClick={() => {
+                    playSound('transition');
+                    onTogglePause();
+                  }}
                   size={{ base: 'md', md: 'lg' }}
                   variant="ghost"
                   color="gray.600"
@@ -189,7 +193,10 @@ export function RunningStage({
                   {isPaused ? t('running.continue') : t('running.pause')}
                 </Button>
                 <Button
-                  onClick={onNext}
+                  onClick={() => {
+                    playSound('transition');
+                    onNext();
+                  }}
                   size={{ base: 'md', md: 'lg' }}
                   bg="gray.900"
                   color="white"
@@ -205,7 +212,10 @@ export function RunningStage({
                   {t('running.next')}
                 </Button>
                 <Button
-                  onClick={onReset}
+                  onClick={() => {
+                    playSound('transition');
+                    onReset();
+                  }}
                   size={{ base: 'md', md: 'lg' }}
                   variant="ghost"
                   color="gray.600"
