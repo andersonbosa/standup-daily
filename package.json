@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack --port 8080",
-    "build": "next build --webpack",
+    "dev": "next dev --port 8080",
+    "build": "next build",
     "start": "NODE_ENV=production next start",
     "lint": "biome check",
     "format": "biome format --write"
