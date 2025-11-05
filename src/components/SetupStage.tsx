@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { Participant, SessionConfig } from '@/types'
 import {
   Box,
@@ -12,9 +12,11 @@ import {
   VStack,
   HStack,
   IconButton,
+  Portal,
 } from '@chakra-ui/react'
 import { toaster } from '@/components/ui/toaster'
 import type { TranslationKey } from '@/i18n/translations'
+import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react'
 
 interface SetupStageProps {
   initialConfig: SessionConfig | null
@@ -51,9 +53,11 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
     initialConfig?.participants || []
   )
   const [totalMinutes, setTotalMinutes] = useState<number>(
-    initialConfig?.totalMinutes || 15
+    initialConfig?.totalMinutes || 20
   )
   const [newName, setNewName] = useState('')
+  const [emojiPickerOpen, setEmojiPickerOpen] = useState<string | null>(null)
+  const emojiButtonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({})
 
   const addParticipant = () => {
     if (!newName.trim()) return
@@ -84,18 +88,19 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
     setParticipants(participants.map(p => (p.id === id ? { ...p, name } : p)))
   }
 
-  const rotateEmoji = (id: string) => {
-    const usedEmojis = participants
-      .filter(p => p.id !== id)
-      .map(p => p.emoji || '')
-    
+  const openEmojiPicker = (id: string) => {
+    setEmojiPickerOpen(id)
+  }
+
+  const handleEmojiSelect = (emojiData: EmojiClickData, participantId: string) => {
     setParticipants(
       participants.map(p => 
-        p.id === id 
-          ? { ...p, emoji: getRandomEmoji(usedEmojis) }
+        p.id === participantId 
+          ? { ...p, emoji: emojiData.emoji }
           : p
       )
     )
+    setEmojiPickerOpen(null)
   }
 
   const shuffleParticipants = () => {
@@ -144,6 +149,25 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
     }
   }, [initialConfig, t])
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (emojiPickerOpen) {
+        const target = event.target as HTMLElement
+        if (!target.closest('.emoji-picker-container') && !target.closest('.emoji-button')) {
+          setEmojiPickerOpen(null)
+        }
+      }
+    }
+
+    if (emojiPickerOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [emojiPickerOpen])
+
   return (
     <Box h="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }} display="flex" alignItems="center" py={{ base: 8, md: 0 }} overflowY={{ base: 'auto', md: 'hidden' }}>
       <Container maxW="2xl" w="full">
@@ -170,7 +194,7 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
                   min={1}
                   max={60}
                   value={totalMinutes}
-                  onChange={(e) => setTotalMinutes(Number.parseInt(e.target.value) || 15)}
+                  onChange={(e) => setTotalMinutes(Number.parseInt(e.target.value) || 20)}
                   size="lg"
                   fontSize="lg"
                   bg="white"
@@ -275,21 +299,46 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
                       rounded="lg"
                       opacity={participant.isAbsent ? 0.5 : 1}
                       _hover={{ borderColor: 'gray.300', _dark: { borderColor: 'gray.600' } }}
+                      position="relative"
                     >
-                      <Button
-                        onClick={() => rotateEmoji(participant.id)}
-                        size="sm"
-                        variant="ghost"
-                        fontSize="2xl"
-                        p={0}
-                        minW="auto"
-                        h="auto"
-                        _hover={{ transform: 'scale(1.3)', transition: 'transform 0.3s' }}
-                        aria-label={t('setup.changeEmoji')}
-                        title={t('setup.changeEmoji')}
-                      >
-                        {participant.emoji}
-                      </Button>
+                      <Box position="relative">
+                        <Button
+                          ref={(el) => { emojiButtonRefs.current[participant.id] = el }}
+                          onClick={() => openEmojiPicker(participant.id)}
+                          size="sm"
+                          variant="ghost"
+                          fontSize="2xl"
+                          p={0}
+                          minW="auto"
+                          h="auto"
+                          className="emoji-button"
+                          _hover={{ transform: 'scale(1.3)', transition: 'transform 0.3s' }}
+                          aria-label={t('setup.changeEmoji')}
+                          title={t('setup.changeEmoji')}
+                        >
+                          {participant.emoji}
+                        </Button>
+                        {emojiPickerOpen === participant.id && emojiButtonRefs.current[participant.id] && (
+                          <Portal>
+                            <Box
+                              className="emoji-picker-container"
+                              position="fixed"
+                              zIndex={9999}
+                              style={{
+                                top: `${emojiButtonRefs.current[participant.id]?.getBoundingClientRect().bottom ?? 0 + 8}px`,
+                                left: `${emojiButtonRefs.current[participant.id]?.getBoundingClientRect().left ?? 0}px`,
+                              }}
+                            >
+                              <EmojiPicker
+                                onEmojiClick={(emojiData) => handleEmojiSelect(emojiData, participant.id)}
+                                autoFocusSearch={false}
+                                width={320}
+                                height={400}
+                              />
+                            </Box>
+                          </Portal>
+                        )}
+                      </Box>
                       <Input
                         flex={1}
                         value={participant.name}
