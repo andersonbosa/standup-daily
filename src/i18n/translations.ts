@@ -34,6 +34,11 @@ export const translations = {
     'finished.tip': '💡 Considere aumentar o tempo total para a próxima daily',
     'finished.newDaily': 'Nova Daily',
     'finished.settings': 'Configurações',
+    'finished.phrase1': 'Daily concluída',
+    'finished.phrase2': 'Ótimo trabalho',
+    'finished.phrase3': 'Missão cumprida',
+    'finished.phrase4': 'Bem feito',
+    'finished.phrase5': 'Sucesso',
     
     // Menu
     'menu.settings': 'Configurações',
@@ -77,6 +82,11 @@ export const translations = {
     'finished.tip': '💡 Consider increasing the total time for the next daily',
     'finished.newDaily': 'New Daily',
     'finished.settings': 'Settings',
+    'finished.phrase1': 'Daily completed',
+    'finished.phrase2': 'Great work',
+    'finished.phrase3': 'Mission accomplished',
+    'finished.phrase4': 'Well done',
+    'finished.phrase5': 'Success',
     
     // Menu
     'menu.settings': 'Settings',
@@ -120,6 +130,11 @@ export const translations = {
     'finished.tip': '💡 Considere aumentar el tiempo total para la próxima daily',
     'finished.newDaily': 'Nueva Daily',
     'finished.settings': 'Configuración',
+    'finished.phrase1': 'Daily completada',
+    'finished.phrase2': 'Excelente trabajo',
+    'finished.phrase3': 'Misión cumplida',
+    'finished.phrase4': 'Bien hecho',
+    'finished.phrase5': 'Éxito',
     
     // Menu
     'menu.settings': 'Configuración',

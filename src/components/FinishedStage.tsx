@@ -24,12 +24,12 @@ interface FinishedStageProps {
   t: (key: TranslationKey) => string
 }
 
-const MOTIVATIONAL_PHRASES = [
-  'Daily concluída',
-  'Ótimo trabalho',
-  'Missão cumprida',
-  'Bem feito',
-  'Sucesso',
+const MOTIVATIONAL_PHRASE_KEYS: TranslationKey[] = [
+  'finished.phrase1',
+  'finished.phrase2',
+  'finished.phrase3',
+  'finished.phrase4',
+  'finished.phrase5',
 ]
 
 const GIF_ROTATION_INTERVAL = 4000
@@ -64,9 +64,9 @@ async function fetchGiphyGifs(query: string): Promise<GiphyGif[]> {
   }
 }
 
-export function FinishedStage({ stats, onRestart, onBackToSetup }: FinishedStageProps) {
-  const [randomPhrase] = useState(() =>
-    MOTIVATIONAL_PHRASES[Math.floor(Math.random() * MOTIVATIONAL_PHRASES.length)]
+export function FinishedStage({ stats, onRestart, onBackToSetup, t }: FinishedStageProps) {
+  const [randomPhraseKey] = useState(() =>
+    MOTIVATIONAL_PHRASE_KEYS[Math.floor(Math.random() * MOTIVATIONAL_PHRASE_KEYS.length)]
   )
   const [gifs, setGifs] = useState<GiphyGif[]>([])
   const [currentGifIndex, setCurrentGifIndex] = useState(0)
@@ -112,10 +112,10 @@ export function FinishedStage({ stats, onRestart, onBackToSetup }: FinishedStage
           {/* Header */}
           <VStack gap={{ base: 2, md: 1 }} textAlign="center">
             <Heading size={{ base: '4xl', md: '5xl' }} fontWeight="600" color="gray.900" _dark={{ color: 'gray.100' }} letterSpacing="tight">
-              {randomPhrase}
+              {t(randomPhraseKey)}
             </Heading>
             <Text fontSize={{ base: 'md', md: 'lg' }} color="gray.500" _dark={{ color: 'gray.400' }}>
-              Resumo da daily
+              {t('finished.subtitle')}
             </Text>
           </VStack>
 
@@ -169,7 +169,7 @@ export function FinishedStage({ stats, onRestart, onBackToSetup }: FinishedStage
                   {formatTime(totalTimeUsed)}
                 </Text>
                 <Text fontSize="xs" color="gray.500" _dark={{ color: 'gray.400' }}>
-                  Tempo total
+                  {t('finished.totalTime')}
                 </Text>
               </VStack>
             </GridItem>
@@ -188,7 +188,7 @@ export function FinishedStage({ stats, onRestart, onBackToSetup }: FinishedStage
                   {punctualCount}
                 </Text>
                 <Text fontSize="xs" color="gray.500" _dark={{ color: 'gray.400' }}>
-                  Pontuais
+                  {t('finished.punctual')}
                 </Text>
               </VStack>
             </GridItem>
