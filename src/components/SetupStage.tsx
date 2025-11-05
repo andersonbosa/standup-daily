@@ -98,6 +98,15 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
     )
   }
 
+  const shuffleParticipants = () => {
+    const shuffled = [...participants]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    setParticipants(shuffled)
+  }
+
   const handleStart = () => {
     if (participants.length === 0) return
     if (participants.every(p => p.isAbsent)) return
@@ -212,6 +221,20 @@ export function SetupStage({ initialConfig, onStart, t }: SetupStageProps) {
                 px={6}
               >
                 +
+              </Button>
+              <Button
+                onClick={shuffleParticipants}
+                disabled={participants.length < 2}
+                size="lg"
+                bg="gray.100"
+                color="gray.900"
+                _dark={{ bg: 'gray.700', color: 'gray.100' }}
+                _hover={{ bg: 'gray.200', _dark: { bg: 'gray.600' } }}
+                rounded="lg"
+                px={4}
+                title="Aleatorizar ordem"
+              >
+                🔀
               </Button>
             </HStack>
           </VStack>
