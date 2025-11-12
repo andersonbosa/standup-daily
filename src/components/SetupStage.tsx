@@ -46,7 +46,7 @@ const getRandomEmoji = (usedEmojis: string[]): string => {
 export function SetupStage() {
   const { sessionState, saveConfig, startDaily, t, generateShareLink } = useApp()
   const initialConfig = sessionState.config
-  
+
   const [participants, setParticipants] = useState<Participant[]>(
     initialConfig?.participants || []
   )
@@ -59,7 +59,7 @@ export function SetupStage() {
 
   const addParticipant = () => {
     if (!newName.trim()) return
-    
+
     playSound('transition')
     const usedEmojis = participants.map(p => p.emoji || '')
     const newParticipant: Participant = {
@@ -97,8 +97,8 @@ export function SetupStage() {
   const handleEmojiSelect = (emojiData: EmojiClickData, participantId: string) => {
     playSound('transition')
     setParticipants(
-      participants.map(p => 
-        p.id === participantId 
+      participants.map(p =>
+        p.id === participantId
           ? { ...p, emoji: emojiData.emoji }
           : p
       )
@@ -148,7 +148,7 @@ export function SetupStage() {
           title: t('setup.configLoaded'),
           description: t('setup.configLoadedDesc'),
           type: 'info',
-          duration: 3000,
+          duration: 1000,
         })
         localStorage.setItem('lastConfigToast', String(now))
       }
@@ -187,8 +187,8 @@ export function SetupStage() {
   }, [participants, totalMinutes, initialConfig])
 
   return (
-    <Box h="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }} display="flex" alignItems="center" py={{ base: 8, md: 0 }} overflowY={{ base: 'auto', md: 'hidden' }}>
-      <Container maxW="2xl" w="full">
+    <Box minH="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }} display="flex" alignItems={{ base: 'flex-start', md: 'center' }} py={{ base: 8, md: 0 }} overflowY="auto">
+      <Container maxW="2xl" w="full" px={{ base: 4, md: 6 }}>
         <VStack gap={{ base: 8, md: 6 }} align="stretch">
           {/* Header */}
           <VStack gap={{ base: 2, md: 1 }} textAlign="center">
@@ -201,15 +201,21 @@ export function SetupStage() {
           </VStack>
 
           {/* Time Input */}
-          <VStack gap={3} align="stretch">
-            <HStack justify="space-between" align="end">
-              <VStack gap={1} align="start" flex={1}>
+          <VStack gap={2} align="stretch">
+            <VStack gap={1} align="start" flex={1}>
+              <HStack>
                 <Text fontSize="sm" fontWeight="500" color="gray.700" _dark={{ color: 'gray.300' }}>
                   {t('setup.timeTotal')}
                 </Text>
+                <Text fontSize="sm" color="gray.500" pb={2}>
+                  ({Math.floor(timePerPerson / 60)}:{String(timePerPerson % 60).padStart(2, '0')} × {presentCount})
+                </Text>
+              </HStack>
+              <HStack gap={2}>
                 <Input
+                  id="timeTotal"
                   type="number"
-                  min={1}
+                  min={0}
                   max={60}
                   value={totalMinutes}
                   onChange={(e) => setTotalMinutes(Number.parseInt(e.target.value, 10) || 20)}
@@ -221,15 +227,25 @@ export function SetupStage() {
                   _hover={{ borderColor: 'gray.300', _dark: { borderColor: 'gray.600' } }}
                   _focus={{ borderColor: 'gray.900', boxShadow: '0 0 0 1px var(--chakra-colors-gray-900)', _dark: { borderColor: 'gray.100' } }}
                   rounded="lg"
-                  w="120px"
+                  w="52px"
                 />
-              </VStack>
-              {presentCount > 0 && (
-                <Text fontSize="sm" color="gray.500" pb={2}>
-                  {Math.floor(timePerPerson / 60)}:{String(timePerPerson % 60).padStart(2, '0')} × {presentCount}
-                </Text>
-              )}
-            </HStack>
+                <Button
+                  onClick={() => {
+                    playSound('transition')
+                    setTotalMinutes(20)
+                  }}
+                  size="md"
+                  variant="ghost"
+                  color="gray.600"
+                  _dark={{ color: 'gray.400' }}
+                  _hover={{ color: 'gray.900', bg: 'gray.100', _dark: { color: 'gray.100', bg: 'gray.800' } }}
+                  fontSize="sm"
+                  px={3}
+                >
+                  20min
+                </Button>
+              </HStack>
+            </VStack>
           </VStack>
 
           {/* Add Participant */}
@@ -260,7 +276,7 @@ export function SetupStage() {
                 _dark={{ bg: 'gray.100', color: 'gray.900' }}
                 _hover={{ bg: 'gray.800', _dark: { bg: 'gray.200' } }}
                 rounded="lg"
-                px={6}
+                px={4}
               >
                 +
               </Button>
@@ -291,7 +307,7 @@ export function SetupStage() {
                 <VStack
                   gap={2}
                   align="stretch"
-                  maxH={{ base: '300px', md: '280px' }}
+                  maxH={{ base: '20vh', md: '30vh' }}
                   overflowY="auto"
                   css={{
                     '&::-webkit-scrollbar': {
@@ -309,7 +325,7 @@ export function SetupStage() {
                   {participants.map((participant) => (
                     <HStack
                       key={participant.id}
-                      p={3}
+                      p={2}
                       bg="white"
                       borderWidth="1px"
                       borderColor="gray.200"
@@ -405,16 +421,16 @@ export function SetupStage() {
           </VStack>
 
           {/* Action Buttons */}
-          <VStack gap={3} w="full">
+          <VStack gap={2} w="full">
             <Button
               onClick={handleStart}
               disabled={presentCount === 0}
               size="lg"
-              h="48px"
+              h={{ base: '44px', md: '48px' }}
               w="full"
               bg={presentCount > 0 ? 'gray.900' : 'gray.200'}
               color={presentCount > 0 ? 'white' : 'gray.400'}
-              _dark={{ 
+              _dark={{
                 bg: presentCount > 0 ? 'gray.100' : 'gray.700',
                 color: presentCount > 0 ? 'gray.900' : 'gray.500'
               }}
@@ -426,7 +442,7 @@ export function SetupStage() {
             >
               {t('setup.startDaily')}
             </Button>
-            
+
             {presentCount > 0 && (
               <Button
                 onClick={() => {

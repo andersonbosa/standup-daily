@@ -57,7 +57,7 @@ export function RunningStage() {
       h="100vh"
       bg="gray.50"
       _dark={{ bg: 'gray.900' }}
-      overflowY={{ base: 'auto', md: 'hidden' }}
+      overflowY="auto"
       position="relative"
       transition="background-color 1s ease"
     >
@@ -226,7 +226,7 @@ export function RunningStage() {
               _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
               rounded="lg"
               p={{ base: 3, lg: 4 }}
-              maxH={{ base: '200px', lg: 'calc(100vh - 4rem)' }}
+              maxH={{ base: '25vh', lg: 'calc(100vh - 4rem)' }}
             >
               <VStack gap={{ base: 2, lg: 3 }} align="stretch">
                 <Text
@@ -242,7 +242,7 @@ export function RunningStage() {
                 <VStack
                   gap={{ base: 1, lg: 1.5 }}
                   overflowY="auto"
-                  maxH={{ base: '150px', lg: 'calc(100vh - 10rem)' }}
+                  maxH={{ base: '18vh', lg: 'calc(100vh - 10rem)' }}
                   css={{
                     '&::-webkit-scrollbar': {
                       width: '6px',

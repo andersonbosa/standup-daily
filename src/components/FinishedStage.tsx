@@ -122,18 +122,15 @@ export function FinishedStage() {
   }
 
   return (
-    <Box h="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }} display="flex" alignItems="center" py={{ base: 8, md: 0 }} overflowY={{ base: 'auto', md: 'hidden' }} position="relative">
+    <Box minH="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }} display="flex" alignItems={{ base: 'flex-start', md: 'center' }} py={{ base: 8, md: 0 }} overflowY="auto" position="relative">
       <ConfettiAnimation />
-      <Container maxW="3xl" w="full">
-        <VStack gap={{ base: 8, md: 6 }} align="stretch">
+      <Container maxW="3xl" w="full" px={{ base: 4, md: 6 }}>
+        <VStack gap={{ base: 4, md: 6 }} align="stretch">
           {/* Header */}
           <VStack gap={{ base: 2, md: 1 }} textAlign="center">
             <Heading size={{ base: '4xl', md: '5xl' }} fontWeight="600" color="gray.900" _dark={{ color: 'gray.100' }} letterSpacing="tight">
               {t(randomPhraseKey)}
             </Heading>
-            <Text fontSize={{ base: 'md', md: 'lg' }} color="gray.500" _dark={{ color: 'gray.400' }}>
-              {t('finished.subtitle')}
-            </Text>
           </VStack>
 
           {/* GIF Animation */}
@@ -150,10 +147,10 @@ export function FinishedStage() {
                 borderColor="gray.200"
                 bg="white"
                 _dark={{ borderColor: 'gray.700', bg: 'gray.800' }}
-                maxW="400px"
+                maxW={{ base: '90vw', md: '400px' }}
                 w="full"
-                minH="256px"
-                maxH="256px"
+                minH={{ base: '30vh', md: '256px' }}
+                maxH={{ base: '30vh', md: '256px' }}
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
@@ -240,15 +237,15 @@ export function FinishedStage() {
 
           {/* Feedback Card */}
           <Box
-            p={4}
-            bg="white"
-            borderWidth="1px"
-            borderColor="gray.200"
-            _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
+            p={2}
+            // bg="white"
+            // borderWidth="1px"
+            // borderColor="gray.200"
+            // _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
             rounded="lg"
           >
             {!feedbackGiven ? (
-              <VStack gap={3}>
+              <VStack gap={2}>
                 <Text fontSize="sm" fontWeight="500" color="gray.700" _dark={{ color: 'gray.300' }}>
                   {t('finished.feedbackQuestion')}
                 </Text>
