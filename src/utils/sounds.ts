@@ -5,7 +5,7 @@ export const playSound = (type: 'transition' | 'complete' | 'overtime') => {
   
   try {
     const audio = new Audio('/click.mp3');
-    audio.volume = 0.5;
+    audio.volume = 0.1;
     audio.play().catch(error => {
       console.warn('Error playing sound:', error);
     });

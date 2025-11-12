@@ -44,6 +44,8 @@ export const translations = {
     'finished.phrase3': 'Missão cumprida',
     'finished.phrase4': 'Bem feito',
     'finished.phrase5': 'Sucesso',
+    'finished.feedbackQuestion': 'Gostou da ferramenta?',
+    'finished.feedbackThanks': 'Obrigado pelo feedback! 🙏',
     
     // Menu
     'menu.settings': 'Configurações',
@@ -98,6 +100,8 @@ export const translations = {
     'finished.phrase3': 'Mission accomplished',
     'finished.phrase4': 'Well done',
     'finished.phrase5': 'Success',
+    'finished.feedbackQuestion': 'Did you like the tool?',
+    'finished.feedbackThanks': 'Thanks for your feedback! 🙏',
     
     // Menu
     'menu.settings': 'Settings',
@@ -152,6 +156,8 @@ export const translations = {
     'finished.phrase3': 'Misión cumplida',
     'finished.phrase4': 'Bien hecho',
     'finished.phrase5': 'Éxito',
+    'finished.feedbackQuestion': '¿Te gustó la herramienta?',
+    'finished.feedbackThanks': '¡Gracias por tu opinión! 🙏',
     
     // Menu
     'menu.settings': 'Configuración',
