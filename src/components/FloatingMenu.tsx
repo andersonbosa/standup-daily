@@ -1,22 +1,22 @@
 'use client'
 
-import {
-  Box,
-  IconButton,
-  Text,
-  HStack,
-} from '@chakra-ui/react'
+import { useApp } from '@/components/context/AppContext'
 import { useColorMode } from '@/components/ui/color-mode'
 import {
   MenuContent,
   MenuItem,
-  MenuRoot,
-  MenuTrigger,
-  MenuSeparator,
   MenuItemGroup,
+  MenuRoot,
+  MenuSeparator,
+  MenuTrigger,
 } from '@/components/ui/menu'
 import { playSound } from '@/utils/sounds'
-import { useApp } from '@/components/context/AppContext'
+import {
+  Box,
+  HStack,
+  IconButton,
+  Text,
+} from '@chakra-ui/react'
 
 export function FloatingMenu() {
   const { language, setLanguage, t, clearParticipants, sessionState } = useApp()

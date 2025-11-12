@@ -15,6 +15,10 @@ export const translations = {
     'setup.configLoaded': 'Configuração carregada',
     'setup.configLoadedDesc': 'Sua última configuração foi restaurada automaticamente',
     'setup.changeEmoji': 'Clique para trocar o emoji',
+    'setup.share': 'Compartilhar',
+    'setup.shareCopied': 'Link copiado!',
+    'setup.shareError': 'Erro ao copiar link',
+    'setup.sharedConfigLoaded': 'Configuração compartilhada carregada',
     
     // RunningStage
     'running.exceeded': 'Tempo excedido',
@@ -65,6 +69,10 @@ export const translations = {
     'setup.configLoaded': 'Configuration loaded',
     'setup.configLoadedDesc': 'Your last configuration was automatically restored',
     'setup.changeEmoji': 'Click to change emoji',
+    'setup.share': 'Share',
+    'setup.shareCopied': 'Link copied!',
+    'setup.shareError': 'Error copying link',
+    'setup.sharedConfigLoaded': 'Shared configuration loaded',
     
     // RunningStage
     'running.exceeded': 'Time exceeded',
@@ -115,6 +123,10 @@ export const translations = {
     'setup.configLoaded': 'Configuración cargada',
     'setup.configLoadedDesc': 'Su última configuración fue restaurada automáticamente',
     'setup.changeEmoji': 'Haz clic para cambiar el emoji',
+    'setup.share': 'Compartir',
+    'setup.shareCopied': '¡Enlace copiado!',
+    'setup.shareError': 'Error al copiar enlace',
+    'setup.sharedConfigLoaded': 'Configuración compartida cargada',
     
     // RunningStage
     'running.exceeded': 'Tiempo excedido',

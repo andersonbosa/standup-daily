@@ -44,7 +44,7 @@ const getRandomEmoji = (usedEmojis: string[]): string => {
 }
 
 export function SetupStage() {
-  const { sessionState, saveConfig, startDaily, t } = useApp()
+  const { sessionState, saveConfig, startDaily, t, generateShareLink } = useApp()
   const initialConfig = sessionState.config
   
   const [participants, setParticipants] = useState<Participant[]>(
@@ -404,26 +404,62 @@ export function SetupStage() {
             </Box>
           </VStack>
 
-          {/* Start Button */}
-          <Button
-            onClick={handleStart}
-            disabled={presentCount === 0}
-            size="lg"
-            h="48px"
-            bg={presentCount > 0 ? 'gray.900' : 'gray.200'}
-            color={presentCount > 0 ? 'white' : 'gray.400'}
-            _dark={{ 
-              bg: presentCount > 0 ? 'gray.100' : 'gray.700',
-              color: presentCount > 0 ? 'gray.900' : 'gray.500'
-            }}
-            _hover={presentCount > 0 ? { bg: 'gray.800', _dark: { bg: 'gray.200' } } : {}}
-            rounded="lg"
-            fontSize="md"
-            fontWeight="600"
-            cursor={presentCount === 0 ? 'not-allowed' : 'pointer'}
-          >
-            {t('setup.startDaily')}
-          </Button>
+          {/* Action Buttons */}
+          <VStack gap={3} w="full">
+            <Button
+              onClick={handleStart}
+              disabled={presentCount === 0}
+              size="lg"
+              h="48px"
+              w="full"
+              bg={presentCount > 0 ? 'gray.900' : 'gray.200'}
+              color={presentCount > 0 ? 'white' : 'gray.400'}
+              _dark={{ 
+                bg: presentCount > 0 ? 'gray.100' : 'gray.700',
+                color: presentCount > 0 ? 'gray.900' : 'gray.500'
+              }}
+              _hover={presentCount > 0 ? { bg: 'gray.800', _dark: { bg: 'gray.200' } } : {}}
+              rounded="lg"
+              fontSize="md"
+              fontWeight="600"
+              cursor={presentCount === 0 ? 'not-allowed' : 'pointer'}
+            >
+              {t('setup.startDaily')}
+            </Button>
+            
+            {presentCount > 0 && (
+              <Button
+                onClick={() => {
+                  const link = generateShareLink()
+                  if (link) {
+                    navigator.clipboard.writeText(link).then(() => {
+                      playSound('transition')
+                      toaster.create({
+                        title: t('setup.shareCopied'),
+                        type: 'success',
+                        duration: 2000,
+                      })
+                    }).catch(() => {
+                      toaster.create({
+                        title: t('setup.shareError'),
+                        type: 'error',
+                        duration: 2000,
+                      })
+                    })
+                  }
+                }}
+                size="md"
+                variant="ghost"
+                w="full"
+                color="gray.600"
+                _dark={{ color: 'gray.400' }}
+                _hover={{ color: 'gray.900', bg: 'gray.100', _dark: { color: 'gray.100', bg: 'gray.800' } }}
+                fontSize="sm"
+              >
+                🔗 {t('setup.share')}
+              </Button>
+            )}
+          </VStack>
         </VStack>
       </Container>
     </Box>
