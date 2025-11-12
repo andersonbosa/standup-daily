@@ -15,6 +15,7 @@ import {
   Grid,
   GridItem,
   Image,
+  Collapsible,
 } from '@chakra-ui/react'
 
 const MOTIVATIONAL_PHRASE_KEYS: TranslationKey[] = [
@@ -65,8 +66,8 @@ async function fetchGiphyGifs(query: string): Promise<GiphyGif[]> {
 }
 
 export function FinishedStage() {
-  const { sessionState, resetDaily, startDaily, t } = useApp();
-  const stats = sessionState.participantStats;
+  const { sessionState, resetDaily, startDaily, t } = useApp()
+  const stats = sessionState.participantStats
   const [randomPhraseKey] = useState(() =>
     MOTIVATIONAL_PHRASE_KEYS[Math.floor(Math.random() * MOTIVATIONAL_PHRASE_KEYS.length)]
   )
@@ -155,159 +156,181 @@ export function FinishedStage() {
             </Box>
           )}
 
-          {/* Stats Overview */}
-          <Grid templateColumns={{  base: 'repeat(3, 1fr)' }} gap={3}>
-            <GridItem>
-              <VStack
-                gap={1}
-                p={4}
-                bg="white"
-                borderWidth="1px"
-                borderColor="gray.200"
-                _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
-                rounded="lg"
-              >
-                <Text fontSize="2xl" fontWeight="300" color="gray.900" _dark={{ color: 'gray.100' }}>
-                  {formatTime(totalTimeUsed)}
-                </Text>
-                <Text fontSize="xs" color="gray.500" _dark={{ color: 'gray.400' }}>
-                  {t('finished.totalTime')}
-                </Text>
-              </VStack>
-            </GridItem>
+          <section>
+            {/* Stats Overview */}
+            <Grid templateColumns={{ base: 'repeat(3, 1fr)' }} gap={3}>
+              <GridItem>
+                <VStack
+                  gap={1}
+                  p={4}
+                  bg="white"
+                  borderWidth="1px"
+                  borderColor="gray.200"
+                  _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
+                  rounded="lg"
+                >
+                  <Text fontSize="2xl" fontWeight="300" color="gray.900" _dark={{ color: 'gray.100' }}>
+                    {formatTime(totalTimeUsed)}
+                  </Text>
+                  <Text fontSize="xs" color="gray.500" _dark={{ color: 'gray.400' }}>
+                    {t('finished.totalTime')}
+                  </Text>
+                </VStack>
+              </GridItem>
 
-            <GridItem>
-              <VStack
-                gap={1}
-                p={4}
-                bg="white"
-                borderWidth="1px"
-                borderColor="gray.200"
-                _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
-                rounded="lg"
-              >
-                <Text fontSize="2xl" fontWeight="300" color="gray.900" _dark={{ color: 'gray.100' }}>
-                  {punctualCount}
-                </Text>
-                <Text fontSize="xs" color="gray.500" _dark={{ color: 'gray.400' }}>
-                  {t('finished.punctual')}
-                </Text>
-              </VStack>
-            </GridItem>
+              <GridItem>
+                <VStack
+                  gap={1}
+                  p={4}
+                  bg="white"
+                  borderWidth="1px"
+                  borderColor="gray.200"
+                  _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
+                  rounded="lg"
+                >
+                  <Text fontSize="2xl" fontWeight="300" color="gray.900" _dark={{ color: 'gray.100' }}>
+                    {punctualCount}
+                  </Text>
+                  <Text fontSize="xs" color="gray.500" _dark={{ color: 'gray.400' }}>
+                    {t('finished.punctual')}
+                  </Text>
+                </VStack>
+              </GridItem>
 
-            <GridItem>
-              <VStack
-                gap={1}
-                p={4}
-                bg="white"
-                borderWidth="1px"
-                borderColor="gray.200"
-                _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
-                rounded="lg"
-              >
+              <GridItem>
+                <VStack
+                  gap={1}
+                  p={4}
+                  bg="white"
+                  borderWidth="1px"
+                  borderColor="gray.200"
+                  _dark={{ bg: 'gray.800', borderColor: 'gray.700' }}
+                  rounded="lg"
+                >
                 <Text fontSize="2xl" fontWeight="300" color={exceededCount > 0 ? 'red.500' : 'gray.900'} _dark={{ color: exceededCount > 0 ? 'red.400' : 'gray.100' }}>
                   {exceededCount}
                 </Text>
                 <Text fontSize="xs" color="gray.500" _dark={{ color: 'gray.400' }}>
-                  Excederam
+                  {t('finished.exceeded')}
                 </Text>
-              </VStack>
-            </GridItem>
-          </Grid>
+                </VStack>
+              </GridItem>
+            </Grid>
 
           {/* Individual Performance */}
-          <VStack gap={3} align="stretch">
-            <Text fontSize="xs" fontWeight="500" color="gray.700" _dark={{ color: 'gray.300' }} textTransform="uppercase" letterSpacing="wide">
-              Desempenho individual
-            </Text>
-            <VStack
-              gap={2}
-              align="stretch"
-              maxH={{ base: '300px', md: '220px' }}
-              overflowY="auto"
-              css={{
-                '&::-webkit-scrollbar': {
-                  width: '6px',
-                },
-                '&::-webkit-scrollbar-track': {
-                  background: 'transparent',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  background: '#E5E7EB',
-                  borderRadius: '3px',
-                },
-              }}
-            >
-              {stats.map((stat, index) => {
-                const percentage = (stat.timeUsed / stat.timeAllowed) * 100
-                return (
-                  <Box
-                    key={stat.id}
-                    p={3}
-                    bg="white"
-                    borderWidth="1px"
-                    borderColor={stat.exceeded ? 'red.200' : 'gray.200'}
-                    _dark={{ bg: 'gray.800', borderColor: stat.exceeded ? 'red.900' : 'gray.700' }}
-                    rounded="lg"
-                  >
-                    <VStack gap={2} align="stretch">
-                      <HStack justify="space-between">
-                        <HStack gap={2}>
-                          <Text fontSize="xs" color="gray.400" fontWeight="500" w="20px">
-                            {index + 1}
-                          </Text>
-                          <Text fontSize="sm" fontWeight="500" color="gray.900" _dark={{ color: 'gray.100' }}>
-                            {stat.name}
-                          </Text>
-                        </HStack>
-                        <HStack gap={2}>
-                          <Text
-                            fontSize="sm"
-                            fontWeight="500"
-                            color={stat.exceeded ? 'red.500' : 'gray.500'}
-                            _dark={{ color: stat.exceeded ? 'red.400' : 'gray.400' }}
-                          >
-                            {formatTime(stat.timeUsed)}
-                          </Text>
-                          {stat.exceeded ? (
-                            <Text fontSize="xs" color="red.500" _dark={{ color: 'red.400' }} fontWeight="500">
-                              +{formatTime(stat.timeUsed - stat.timeAllowed)}
-                            </Text>
-                          ) : (
-                            <Text fontSize="sm" color="gray.400" _dark={{ color: 'gray.500' }}>✓</Text>
-                          )}
-                        </HStack>
-                      </HStack>
-                      <Box w="full" h="2px" bg="gray.100" _dark={{ bg: 'gray.700' }} rounded="full" overflow="hidden">
-                        <Box
-                          h="full"
-                          bg={stat.exceeded ? 'red.500' : 'gray.900'}
-                          _dark={{ bg: stat.exceeded ? 'red.400' : 'gray.100' }}
-                          w={`${Math.min(percentage, 100)}%`}
-                          transition="width 0.5s"
-                        />
+          <Collapsible.Root defaultOpen={false}>
+            <HStack justify="space-between" align="center" mb={3}>
+              <Text fontSize="xs" fontWeight="500" color="gray.700" _dark={{ color: 'gray.300' }} textTransform="uppercase" letterSpacing="wide">
+                {t('finished.performance')}
+              </Text>
+              <Collapsible.Trigger asChild>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  color="gray.500"
+                  _dark={{ color: 'gray.400' }}
+                  _hover={{ color: 'gray.900', bg: 'gray.100', _dark: { color: 'gray.100', bg: 'gray.800' } }}
+                  fontSize="xs"
+                  px={2}
+                  h="24px"
+                >
+                  <Collapsible.Indicator>▶</Collapsible.Indicator>
+                </Button>
+              </Collapsible.Trigger>
+            </HStack>
+            <Collapsible.Content>
+              <VStack gap={3} align="stretch">
+                <VStack
+                  gap={2}
+                  align="stretch"
+                  maxH={{ base: '300px', md: '220px' }}
+                  overflowY="auto"
+                  css={{
+                    '&::-webkit-scrollbar': {
+                      width: '6px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      background: 'transparent',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      background: '#E5E7EB',
+                      borderRadius: '3px',
+                    },
+                  }}
+                >
+                  {stats.map((stat, index) => {
+                    const percentage = (stat.timeUsed / stat.timeAllowed) * 100
+                    return (
+                      <Box
+                        key={stat.id}
+                        p={3}
+                        bg="white"
+                        borderWidth="1px"
+                        borderColor={stat.exceeded ? 'red.200' : 'gray.200'}
+                        _dark={{ bg: 'gray.800', borderColor: stat.exceeded ? 'red.900' : 'gray.700' }}
+                        rounded="lg"
+                      >
+                        <VStack gap={2} align="stretch">
+                          <HStack justify="space-between">
+                            <HStack gap={2}>
+                              <Text fontSize="xs" color="gray.400" fontWeight="500" w="20px">
+                                {index + 1}
+                              </Text>
+                              <Text fontSize="sm" fontWeight="500" color="gray.900" _dark={{ color: 'gray.100' }}>
+                                {stat.name}
+                              </Text>
+                            </HStack>
+                            <HStack gap={2}>
+                              <Text
+                                fontSize="sm"
+                                fontWeight="500"
+                                color={stat.exceeded ? 'red.500' : 'gray.500'}
+                                _dark={{ color: stat.exceeded ? 'red.400' : 'gray.400' }}
+                              >
+                                {formatTime(stat.timeUsed)}
+                              </Text>
+                              {stat.exceeded ? (
+                                <Text fontSize="xs" color="red.500" _dark={{ color: 'red.400' }} fontWeight="500">
+                                  +{formatTime(stat.timeUsed - stat.timeAllowed)}
+                                </Text>
+                              ) : (
+                                <Text fontSize="sm" color="gray.400" _dark={{ color: 'gray.500' }}>✓</Text>
+                              )}
+                            </HStack>
+                          </HStack>
+                          <Box w="full" h="2px" bg="gray.100" _dark={{ bg: 'gray.700' }} rounded="full" overflow="hidden">
+                            <Box
+                              h="full"
+                              bg={stat.exceeded ? 'red.500' : 'gray.900'}
+                              _dark={{ bg: stat.exceeded ? 'red.400' : 'gray.100' }}
+                              w={`${Math.min(percentage, 100)}%`}
+                              transition="width 0.5s"
+                            />
+                          </Box>
+                        </VStack>
                       </Box>
-                    </VStack>
-                  </Box>
-                )
-              })}
-            </VStack>
-          </VStack>
+                    )
+                  })}
+                </VStack>
+              </VStack>
+            </Collapsible.Content>
+          </Collapsible.Root>
 
           {exceededCount > 3 && (
             <Box p={3} bg="yellow.50" borderWidth="1px" borderColor="yellow.200" _dark={{ bg: 'yellow.950', borderColor: 'yellow.900' }} rounded="lg">
               <Text fontSize="xs" color="gray.700" _dark={{ color: 'yellow.200' }}>
-                💡 Considere aumentar o tempo total para a próxima daily
+                {t('finished.tip')}
               </Text>
             </Box>
           )}
+          </section>
 
           {/* Actions */}
           <HStack gap={2} justify="center">
             <Button
               onClick={() => {
-                playSound('transition');
-                resetDaily();
+                playSound('transition')
+                resetDaily()
               }}
               size="lg"
               bg="gray.900"
@@ -318,12 +341,12 @@ export function FinishedStage() {
               px={6}
               fontSize="sm"
             >
-              Configurações
+              {t('finished.settings')}
             </Button>
             <Button
               onClick={() => {
-                playSound('transition');
-                startDaily();
+                playSound('transition')
+                startDaily()
               }}
               size="lg"
               variant="ghost"
@@ -332,7 +355,7 @@ export function FinishedStage() {
               _hover={{ color: 'gray.900', bg: 'gray.100', _dark: { color: 'gray.100', bg: 'gray.800' } }}
               fontSize="sm"
             >
-              Nova Daily
+              {t('finished.newDaily')}
             </Button>
           </HStack>
         </VStack>

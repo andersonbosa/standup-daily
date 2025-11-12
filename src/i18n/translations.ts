@@ -23,6 +23,7 @@ export const translations = {
     'running.next': 'Próximo',
     'running.restart': 'Reiniciar',
     'running.order': 'Ordem',
+    'running.nextTag': 'Próximo',
     
     // FinishedStage
     'finished.title': 'Daily concluída',
@@ -72,6 +73,7 @@ export const translations = {
     'running.next': 'Next',
     'running.restart': 'Restart',
     'running.order': 'Order',
+    'running.nextTag': 'Next',
     
     // FinishedStage
     'finished.title': 'Daily completed',
@@ -121,6 +123,7 @@ export const translations = {
     'running.next': 'Siguiente',
     'running.restart': 'Reiniciar',
     'running.order': 'Orden',
+    'running.nextTag': 'Siguiente',
     
     // FinishedStage
     'finished.title': 'Daily completada',

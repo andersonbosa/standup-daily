@@ -13,6 +13,7 @@ import {
   HStack,
   Grid,
   GridItem,
+  Tag,
 } from '@chakra-ui/react'
 
 export function RunningStage() {
@@ -255,36 +256,47 @@ export function RunningStage() {
                     },
                   }}
                 >
-                  {participants.map((participant, index) => (
-                    <HStack
-                      key={participant.id}
-                      p={{ base: 2, lg: 2.5 }}
-                      w="full"
-                      bg={index === currentIndex ? 'gray.900' : 'transparent'}
-                      color={index === currentIndex ? 'white' : index < currentIndex ? 'gray.400' : 'gray.900'}
-                      _dark={{
-                        bg: index === currentIndex ? 'gray.100' : 'transparent',
-                        color: index === currentIndex ? 'gray.900' : index < currentIndex ? 'gray.500' : 'gray.100'
-                      }}
-                      rounded="md"
-                      fontWeight={index === currentIndex ? '600' : '400'}
-                      fontSize={{ base: 'xs', lg: 'sm' }}
-                    >
-                      <Text fontSize={{ base: 'md', lg: 'lg' }}>{participant.emoji}</Text>
-                      <Text flex={1} truncate>{participant.name}</Text>
-                      {index < currentIndex && <Text fontSize="xs">✓</Text>}
-                      {index === currentIndex && (
-                        <Box
-                          w={2}
-                          h={2}
-                          bg="white"
-                          _dark={{ bg: 'gray.900' }}
-                          rounded="full"
-                          className="animate-pulse"
-                        />
-                      )}
-                    </HStack>
-                  ))}
+                  {participants.map((participant, index) => {
+                    const isNext = index === currentIndex + 1
+                    const shouldShowOnMobile = index === currentIndex || isNext
+                    
+                    return (
+                      <HStack
+                        key={participant.id}
+                        p={{ base: 2, lg: 2.5 }}
+                        w="full"
+                        bg={index === currentIndex ? 'gray.900' : 'transparent'}
+                        color={index === currentIndex ? 'white' : index < currentIndex ? 'gray.400' : 'gray.900'}
+                        _dark={{
+                          bg: index === currentIndex ? 'gray.100' : 'transparent',
+                          color: index === currentIndex ? 'gray.900' : index < currentIndex ? 'gray.500' : 'gray.100'
+                        }}
+                        rounded="md"
+                        fontWeight={index === currentIndex ? '600' : '400'}
+                        fontSize={{ base: 'xs', lg: 'sm' }}
+                        display={{ base: shouldShowOnMobile ? 'flex' : 'none', lg: 'flex' }}
+                      >
+                        <Text fontSize={{ base: 'md', lg: 'lg' }}>{participant.emoji}</Text>
+                        <Text flex={1} truncate>{participant.name}</Text>
+                        {isNext && (
+                          <Tag.Root size="sm" variant="subtle" colorPalette="blue">
+                            <Tag.Label>{t('running.nextTag')}</Tag.Label>
+                          </Tag.Root>
+                        )}
+                        {index < currentIndex && <Text fontSize="xs">✓</Text>}
+                        {index === currentIndex && (
+                          <Box
+                            w={2}
+                            h={2}
+                            bg="white"
+                            _dark={{ bg: 'gray.900' }}
+                            rounded="full"
+                            className="animate-pulse"
+                          />
+                        )}
+                      </HStack>
+                    )
+                  })}
                 </VStack>
               </VStack>
             </Box>
