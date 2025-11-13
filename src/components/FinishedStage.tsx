@@ -150,7 +150,7 @@ export function FinishedStage() {
                 maxW={{ base: '90vw', md: '400px' }}
                 w="full"
                 minH={{ base: '30vh', md: '256px' }}
-                maxH={{ base: '30vh', md: '256px' }}
+                maxH={{ base: '40vh', md: '320px' }}
                 display="flex"
                 alignItems="center"
                 justifyContent="center"

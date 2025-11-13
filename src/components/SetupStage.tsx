@@ -227,7 +227,7 @@ export function SetupStage() {
                   _hover={{ borderColor: 'gray.300', _dark: { borderColor: 'gray.600' } }}
                   _focus={{ borderColor: 'gray.900', boxShadow: '0 0 0 1px var(--chakra-colors-gray-900)', _dark: { borderColor: 'gray.100' } }}
                   rounded="lg"
-                  w="52px"
+                  w="72px"
                 />
                 <Button
                   onClick={() => {

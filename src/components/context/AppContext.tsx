@@ -16,6 +16,7 @@ interface AppContextType {
   saveConfig: (config: SessionConfig) => void
   startDaily: () => void
   nextParticipant: () => void
+  skipParticipant: () => void
   togglePause: () => void
   resetDaily: () => void
   clearParticipants: () => void
@@ -96,6 +97,50 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }))
     }
   }, [sessionState, presentParticipants.length, timePerParticipant])
+
+  const skipParticipant = useCallback(() => {
+    if (!sessionState.config) return
+
+    const currentParticipant = presentParticipants[sessionState.currentParticipantIndex]
+    
+    const otherParticipants = sessionState.config.participants.filter(p => p.id !== currentParticipant.id)
+    const updatedAllParticipants = [...otherParticipants, currentParticipant]
+
+    const updatedConfig = {
+      ...sessionState.config,
+      participants: updatedAllParticipants
+    }
+
+    const updatedStats = sessionState.participantStats.filter((_, idx) => idx !== sessionState.currentParticipantIndex)
+    updatedStats.push({
+      id: currentParticipant.id,
+      name: currentParticipant.name,
+      timeUsed: 0,
+      timeAllowed: timePerParticipant,
+      exceeded: false,
+    })
+
+    const updatedPresentParticipants = updatedAllParticipants.filter(p => !p.isAbsent)
+
+    if (sessionState.currentParticipantIndex >= updatedPresentParticipants.length) {
+      setSessionState(prev => ({
+        ...prev,
+        config: updatedConfig,
+        stage: 'finished',
+        isPaused: true,
+        participantStats: updatedStats,
+      }))
+    } else {
+      setSessionState(prev => ({
+        ...prev,
+        config: updatedConfig,
+        participantStats: updatedStats,
+        remainingSeconds: timePerParticipant,
+      }))
+    }
+
+    setSavedConfig(updatedConfig)
+  }, [sessionState, presentParticipants, timePerParticipant, setSavedConfig])
 
   const togglePause = useCallback(() => {
     setSessionState(prev => ({ ...prev, isPaused: !prev.isPaused }))
@@ -186,6 +231,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     saveConfig,
     startDaily,
     nextParticipant,
+    skipParticipant,
     togglePause,
     resetDaily,
     clearParticipants,

@@ -22,6 +22,7 @@ export function RunningStage() {
     presentParticipants,
     timePerParticipant,
     nextParticipant,
+    skipParticipant,
     togglePause,
     resetDaily,
     t
@@ -175,6 +176,24 @@ export function RunningStage() {
                   fontSize="sm"
                 >
                   {isPaused ? t('running.continue') : t('running.pause')}
+                </Button>
+                <Button
+                  onClick={() => {
+                    playSound('transition')
+                    skipParticipant()
+                  }}
+                  size={{ base: 'md', md: 'lg' }}
+                  variant="ghost"
+                  color="gray.600"
+                  _dark={{ color: 'gray.400' }}
+                  _hover={{
+                    color: 'gray.900',
+                    bg: 'gray.100',
+                    _dark: { color: 'gray.100', bg: 'gray.800' }
+                  }}
+                  fontSize="sm"
+                >
+                  {t('running.skip')}
                 </Button>
                 <Button
                   onClick={() => {
